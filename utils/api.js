@@ -1,8 +1,10 @@
 import axios from "axios";
 
+const BASE_URL = import.meta.env.BASE_URL || "http://localhost:4000";
+
 export const fecthDataFormApi=async(url)=>{
   try {
-    const { data } = await axios.get("http://localhost:4000" + url);
+    const { data } = await axios.get(`${BASE_URL}${url}`);
     return data;
   } catch (error) {
     console.log(error);
@@ -13,7 +15,7 @@ export const fecthDataFormApi=async(url)=>{
 export const postData = async (url, formData) => {
   try {
     // Axios returns data in the 'data' field
-    const { data } = await axios.post("http://localhost:4000" + url, formData);
+    const { data } = await axios.post(`${BASE_URL}${url}`, formData);
     return data; // Return the actual response data
   } catch (error) {
     console.error("Error during POST request:", error);
@@ -23,7 +25,7 @@ export const postData = async (url, formData) => {
 
 export const editData = async (url, updateData) => {
   try {
-    const { data } = await axios.put("http://localhost:4000" + url, updateData);
+    const { data } = await axios.put(`${BASE_URL}${url}`, updateData);
     return data; // Return the actual response data
   } catch (error) {
     console.error("Error during PUT request:", error);
@@ -33,7 +35,7 @@ export const editData = async (url, updateData) => {
 
 export const deleteData = async (url) => {
   try {
-    const { data } = await axios.delete("http://localhost:4000" + url);
+    const { data } = await axios.delete(`${BASE_URL}${url}`);
     return data; // Return the actual response data
   } catch (error) {
     console.error("Error during DELETE request:", error);
