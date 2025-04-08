@@ -14,7 +14,7 @@ router.get('/', async(req, res)=>{
         const items = await Product.find({
             $or: [
                 { name: { $regex: query, $options: 'i'}},
-                {catName: { $regex: query, $options: 'i'}}
+                // {catName: { $regex: query, $options: 'i'}}
             ]
         });
         res.json(items);

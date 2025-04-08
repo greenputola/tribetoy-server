@@ -35,7 +35,11 @@ const orderSchema = mongoose.Schema({
         required:true
     },
     products:[
+
         {   
+            productId:{
+                type: String
+            },
             productName:{
                 type:String,
             },
@@ -54,6 +58,11 @@ const orderSchema = mongoose.Schema({
        
         }
     ],
+
+    status: {
+        type: String,
+        default: "pending"
+    },
     
     date:{
         type:Date,

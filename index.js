@@ -31,6 +31,10 @@ const productReviews = require('./routes/productReview.js');
 const myWishList = require('./routes/myList.js');
 const search = require('./routes/search.js');
 const orders = require('./routes/orders.js')
+const shippingRoutes = require("./routes/shipping");
+const paymentRoutes = require('./routes/payment');
+
+app.use("/api/shipping", shippingRoutes);
 // Static file serving
 app.use("/uploads", express.static("uploads"));
 
@@ -43,6 +47,7 @@ app.use('/api/reviews', productReviews);
 app.use('/api/MyList', myWishList);
 app.use('/api/Search', search);
 app.use('/api/Orders', orders);
+app.use('/api/payment', paymentRoutes);
 // Serve static files (images) from 'public' folder
 // app.use('/images', express.static(path.join(__dirname, 'public/images')));
 

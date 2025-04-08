@@ -5,40 +5,45 @@ const router = express.Router();
 
 
 
-router.get(`/`, async(req, res) =>{
-    try{
+router.get(`/`, async(req, res) => {
+    try {
         const page = parseInt(req.query.page) || 1;
         const perPage = 15;
-        const totalPosts = await Orders.countDocuments();
-        const totalPages = Math.ceil(totalPosts / perPage);
+        const { userid } = req.query; // ← get userid from query
 
-        if (page > totalPages) {
-            return res.status(404).json({ message: "Page not found"})
+        let filter = {};
+        if (userid) {
+            filter.userid = userid; // ← add filtering
         }
 
+        const totalPosts = await Orders.countDocuments(filter);
+        const totalPages = Math.ceil(totalPosts / perPage);
 
-        const orderList = await Orders.find()
-            .skip((page-1) * perPage)
+        if (page > totalPages && totalPages !== 0) {
+            return res.status(404).json({ message: "Page not found" });
+        }
+
+        const orderList = await Orders.find(filter)
+            .skip((page - 1) * perPage)
             .limit(perPage)
             .exec();
 
-        if(!orderList){
-            res.status(500).json({ success: false})
+        if (!orderList) {
+            return res.status(500).json({ success: false });
         }
-    
-        
+
         return res.status(200).json({
-                "orderList":orderList,
-                "totalPages":totalPages,
-                "page":page
-        })
+            orders: orderList, 
+            totalPages,
+            page
+        });
 
-
-
-    }catch(error){
-        res.status(500).json({ success: false})
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ success: false });
     }
-    });
+});
+
     
     
     
@@ -119,7 +124,36 @@ router.delete('/:id', async(req, res) =>{
         }
     });
 
+    router.put('/:id', async(req, res) =>{
 
+
+        const orders = await Orders.findByIdAndUpdate(
+            req.params.id,
+            {
+            name: req.body.name,
+            address: req.body.address,
+            phone: req.body.phone,
+            zip: req.body.zip,
+            amount: req.body.amount,
+            paymentId: req.body.paymentId,
+            email: req.body.email,
+            userid: req.body.userid,
+            products: req.body.products,
+            status: req.body.status
+                
+            },
+            {new:true}
+        )
+
+        if(!orders) {
+            return res.status(500).json({
+                message: 'Orders cannot be updated!',
+                success: false
+            })
+        }
+
+        res.send(orders);
+})
 
 
 module.exports = router;
